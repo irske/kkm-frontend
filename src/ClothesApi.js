@@ -61,7 +61,7 @@ class ClothesApi extends Component {
         let objIdToDelete = null;
         this.setState({ id:idToDelete });
         this.state.cloth.forEach((dat) => {
-            if (dat.id == idToDelete) {
+            if (dat.id === idToDelete) {
                 objIdToDelete = dat.id;
             }
         });
@@ -79,7 +79,7 @@ class ClothesApi extends Component {
         parseInt(idToUpdate);
         this.setState({ id:idToUpdate });
         this.state.cloth.forEach((dat) => {
-            if(dat.id == idToUpdate) {
+            if(dat.id === idToUpdate) {
                 objIdToUpdate = dat.id;
             }
         });
