@@ -3,19 +3,27 @@ import React/*, {Component}*/ from 'react';
 
 const Selector = (props) => {
     const options = props.options || [];
-    // const defaultSelection = props.defaultSelection || options[0];
+    const defaultSelection = props.defaultSelection || options[0];
+    const selection = defaultSelection;
+
+    const selectionRef = React.createRef();
+    const selectionBoxRef = React.createRef();
+
+    const expand = () => {
+        console.log('clicked');
+        selectionRef.current.style.display = 'none';
+        selectionBoxRef.current.style.display = 'block';
+    };
 
     return (
-        <div className="Selector" style={{ border: 'solid 1px #0088ff' }}>
-            {options.map((option) =>
-                <div>{option.value}</div>
-            )}
+        <div className="Selector" style={{ border: 'solid 1px #0088ff' }} onClick={() => expand()}>
+            <div ref={selectionRef}>{selection.value}</div>
 
-            {/* <select>
+            <div ref={selectionBoxRef} style={{ display: 'none' }}>
                 {options.map((option) =>
-                    <option value={option.key} key={option.key}>{option.value}</option>
+                    <div key={option.key}>{option.value}</div>
                 )}
-            </select> */}
+            </div>
         </div>
     )
 }
