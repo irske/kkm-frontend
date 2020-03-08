@@ -1,6 +1,6 @@
 // /client/App.js
 import React, { Component } from 'react';
-import ClothesApi from './ClothesApi';
+// import ClothesApi from './ClothesApi';
 import ArticleList from './components/articleList/ArticleList';
 
 class App extends Component {
@@ -8,7 +8,7 @@ class App extends Component {
         return (
             <div>
                 <ArticleList />
-                <ClothesApi />
+                {/* <ClothesApi /> */}
             </div>
         );
     }
