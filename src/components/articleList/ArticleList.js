@@ -10,7 +10,7 @@ const ArticleList = (props) => {
         articles.push(i);
     }
 
-    const onSubmit = (event) => {
+    function onSubmit(event) {
         console.log('submited');
         event.preventDefault();
     };
@@ -28,7 +28,7 @@ const ArticleList = (props) => {
 
     return (
         <div className="ArticleList">
-            <form onSubmit={(e) => onSubmit(e)}>
+            <form onSubmit={onSubmit}>
                 <div style={style.coworker}>Mitarbeiter: Alexander</div>
 
                 <div style={style.customer}>

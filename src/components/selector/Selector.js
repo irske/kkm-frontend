@@ -1,11 +1,9 @@
-import React, { useEffect }/*, {Component}*/ from 'react';
-import { PlacesChildFriendly } from 'material-ui/svg-icons';
+import React, { useEffect } from 'react';
 // import PropTypes from 'prop-types';
 
 const Selector = (props) => {
     const options = props.options || [];
-    const defaultSelection = props.defaultSelection || options[0];
-    const selection = defaultSelection;
+    options.sort((a, b) => (a.value > b.value) ? 1 : (a.value < b.value) ? -1 : 0);
     let open = false;
 
     const selectionRef = React.createRef();
@@ -37,19 +35,25 @@ const Selector = (props) => {
         }
     };
 
-    function onChange(value) {
+    function onChange(event) {
+        let value = event.target.value.toLowerCase();
         let length = selectionBoxRef.current.children.length;
 
         for (var i = 0; i < length; ++i) {
             let child = selectionBoxRef.current.children[i];
-            if (child.innerText.indexOf(value) !== 0) {
+            let childValue = child.innerText.toLowerCase();
+            if (childValue.indexOf(value) !== 0) {
                 child.style.display = 'none';
             }
             else {
                 child.style.display = 'block';
             }
         }
-    }
+    };
+
+    function onClickSelection(value) {
+        selectionRef.current.value = value;
+    };
 
     const style = {
         container: {
@@ -70,13 +74,12 @@ const Selector = (props) => {
     };
 
     return (
-        <div className="Selector" style={style.container} onClick={() => onClickInside()}>
-            <input style={style.selection} ref={selectionRef} onChange={(e) => onChange(e.target.value)}/>
-            {/* <div ref={selectionRef} style={style.selection}>{selection.value}</div> */}
+        <div className="Selector" style={style.container} onClick={onClickInside}>
+            <input placeholder="Bezeichnung" style={style.selection} ref={selectionRef} onChange={onChange}/>
 
             <div ref={selectionBoxRef} style={style.selectionBox}>
                 {options.map((option) =>
-                    <div key={option.key}>{option.value}</div>
+                    <div key={option.key} onClick={() => onClickSelection(option.value)}>{option.value}</div>
                 )}
             </div>
         </div>

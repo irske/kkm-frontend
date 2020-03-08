@@ -8,9 +8,11 @@ const Article = (props) => {
         { key: 'trousers', value: 'Hose' },
         { key: 'sweater', value: 'Pulli' },
         { key: 'dress', value: 'Kleid' },
-    ]
-    const printValue = (value) => {
-        console.log(value);
+        { key: 'misc', value: 'Sonstiges' },
+    ];
+
+    function printValue(event) {
+        console.log(event.target.value);
     };
 
     const style = {
@@ -50,15 +52,15 @@ const Article = (props) => {
                 <Selector options={options}/>
             </div>
 
-            <input type="text" style={style.input} placeholder="Sonstiges" onChange={(e) => printValue(e.target.value)} />
+            <input type="text" style={style.input} placeholder="Sonstiges" onChange={printValue} />
 
-            <input type="number" style={style.input} min="1" placeholder="Stück" onChange={(e) => printValue(e.target.value)} />
+            <input type="number" style={style.input} min="1" placeholder="Stück" onChange={printValue} />
 
-            <input type="number" style={style.input} min="1" placeholder="Größe" onChange={(e) => printValue(e.target.value)} />
+            <input type="number" style={style.input} min="1" placeholder="Größe" onChange={printValue} />
 
-            <input type="text" style={style.description} placeholder="Beschreibung" onChange={(e) => printValue(e.target.value)} />
+            <input type="text" style={style.description} placeholder="Beschreibung" onChange={printValue} />
 
-            <input type="number" style={style.input} min="0" placeholder="Preis" onChange={(e) => printValue(e.target.value)} />
+            <input type="number" style={style.input} min="0" placeholder="Preis" onChange={printValue} />
         </div>
     )
 }
