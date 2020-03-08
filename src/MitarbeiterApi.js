@@ -2,15 +2,14 @@
 // /client/App.js
 import React, { Component } from 'react';
 import axios from 'axios';
-import Button from '@material-ui/core/Button';
 
-class ClothesApi extends Component {
+class MitarbeiterApi extends Component {
     // initialize our state
     state = {
-        cloth: [],
-        id: 0,
+        mitarbeiter: [],
+        mitarbeiterID: 0,
         name: null,
-        message: null,
+        color: null,
         intervalIsSet: false,
         idToDelete: null,
         idToUpdate: null,
@@ -19,9 +18,9 @@ class ClothesApi extends Component {
 
     // changed and implement those changes into our UI
     componentDidMount() {
-        this.getClothFromDb();
+        this.getMitarbeiterFromDb();
         if (!this.state.intervalIsSet) {
-            let interval = setInterval(this.getClothFromDb, 1000);
+            let interval = setInterval(this.getMitarbeiterFromDb, 1000);
             this.setState({ intervalIsSet: interval });
         }
     }
@@ -35,23 +34,24 @@ class ClothesApi extends Component {
         }
     }
     // fetch data from our data base
-    getClothFromDb = () => {
-        fetch('http://localhost:9000/cloth/getCloth')
-            .then((cloth) => cloth.json())
-            .then((res) => this.setState({ cloth: res.cloth }));
+    getMitarbeiterFromDb = () => {
+        fetch('http://localhost:9000/mitarbeiter')
+            .then((mitarbeiter) => mitarbeiter.json())
+            .then((res) => this.setState({ mitarbeiter: res.mitarbeiter }));
     };
 
+
     // to create new query into our data base
-    postClothToDB = (name, message) => {
-        let currentIds = this.state.cloth.map((cloth) => cloth.id);
+    postMitarbeiterToDB = (name, color) => {
+        let currentIds = this.state.mitarbeiter.map((mitarbeiter) => mitarbeiter.mitarbeiterID);
         let idToBeAdded = 0;
         while (currentIds.includes(idToBeAdded)) {
             ++idToBeAdded;
         }
-        axios.post('http://localhost:9000/cloth/postCloth', {
-            id: idToBeAdded,
+        axios.post('http://localhost:9000/mitarbeiter', {
+            mitarbeiterID: idToBeAdded,
             name:name,
-            message: message,
+            color: color,
         });
     };
 
@@ -59,35 +59,35 @@ class ClothesApi extends Component {
     deleteFromDB = (idToDelete) => {
         parseInt(idToDelete);
         let objIdToDelete = null;
-        this.setState({ id:idToDelete });
-        this.state.cloth.forEach((dat) => {
-            if (dat.id === idToDelete) {
-                objIdToDelete = dat.id;
+        this.setState({ mitarbeiterID:idToDelete });
+        this.state.mitarbeiter.forEach((dat) => {
+            if (dat.mitarbeiterID === idToDelete) {
+                objIdToDelete = dat.mitarbeiterID;
             }
         });
-        axios.delete('http://localhost:9000/cloth/deleteCloth', {
+        axios.delete('http://localhost:9000/mitarbeiter/'+ objIdToDelete, {
             data: {
-                id: objIdToDelete
+                mitarbeiterID: objIdToDelete
             },
         });
 
     };
 
     // to overwrite existing data base information
-    updateDB = (idToUpdate, updateName, updateMessage) => {
+    updateDB = (idToUpdate, updateName, updateColor) => {
         let objIdToUpdate = null;
-        parseInt(idToUpdate);
-        this.setState({ id:idToUpdate });
-        this.state.cloth.forEach((dat) => {
-            if(dat.id === idToUpdate) {
-                objIdToUpdate = dat.id;
+        let id = parseInt(idToUpdate);
+        this.setState({ mitarbeiterID:id });
+        this.state.mitarbeiter.forEach((dat) => {
+            if(dat.mitarbeiterID === id) {
+                objIdToUpdate = dat.mitarbeiterID;
+                console.log('found');
             }
         });
 
-        axios.put('http://localhost:9000/cloth/updateCloth', {
-            id: objIdToUpdate,
+        axios.put('http://localhost:9000/mitarbeiter/'+ objIdToUpdate, {
             name: updateName,
-            description: updateMessage });
+            color: updateColor });
 
     };
 
@@ -95,26 +95,26 @@ class ClothesApi extends Component {
     // it is easy to understand their functions when you
     // see them render into our screen
     render() {
-        const { cloth } = this.state;
+        const { mitarbeiter } = this.state;
         return (
             <div>
-                <ul>
-                    {cloth.length <= 0
+                <table><tbody>
+                    {mitarbeiter.length <= 0
                         ? 'NO DB ENTRIES YET'
-                        : cloth.map((dat) => (
-                            <li style={{ padding: '10px' }} key={dat.id}>
-                                <span style={{ color: 'gray' }}> id: </span> {dat.id} <br />
+                        : mitarbeiter.map((dat) => (
+                            <tr style={{ padding: '10px' }} key={dat.mitarbeiterID}>
+                                <td>
+                                    <span style={{ color: 'gray' }}> id: </span> {dat.mitarbeiterID} </td>
+                                <td>
                                 <span style={{ color: 'gray' }}> name: </span>
-                                {dat.name}
-                                <span style={{ color: 'gray' }}> message: </span>
-                                {dat.message}
-                                <br/>
-                                <Button onClick={() => this.deleteFromDB(dat.id)}>
-                                    DELETE
-                                </Button>
-                            </li>
-                        ))}
-                </ul>
+                                    {dat.name}</td>  <td>
+                                <span style={{ color: 'gray' }}> color: </span>
+                                {dat.color}</td>  <td>
+                                <input type="button" onClick={() => this.deleteFromDB(dat.mitarbeiterID)} value="Delete" /></td>
+                            </tr>
+                        ))}</tbody>
+                </table>
+
                 <div style={{ padding: '10px' }}>
                     <input
                         label="Name"
@@ -124,19 +124,18 @@ class ClothesApi extends Component {
                         style={{ width: '200px' }}
                     />
                     <input
-                        label="Message"
-                        type="text"
-                        onChange={(e) => this.setState({ message: e.target.value })}
+                        label="Color"
+                        type="number"
+                        onChange={(e) => this.setState({ color: e.target.value })}
                         placeholder="add something in the database"
                         style={{ width: '200px' }}
                     />
-                    <button onClick={() => this.postClothToDB(this.state.name, this.state.message)}>
-                        ADD
-                    </button>
+                    <input type="button" onClick={() => this.postMitarbeiterToDB(this.state.name, this.state.color)} value="add">
+                    </input>
                 </div>
                 <div style={{ padding: '10px' }}>
                     <input
-                        type="text"
+                        type="number"
                         style={{ width: '200px' }}
                         onChange={(e) => this.setState({ idToUpdate: e.target.value })}
                         placeholder="id of item to update here"
@@ -148,22 +147,20 @@ class ClothesApi extends Component {
                         placeholder="put new value of the item here"
                     />
                     <input
-                        type="text"
+                        type="number"
                         style={{ width: '200px' }}
-                        onChange={(e) => this.setState({ updateMessage: e.target.value })}
+                        onChange={(e) => this.setState({ updateColor: e.target.value })}
                         placeholder="put new value of the item here"
                     />
-                    <button
+                    <input type="button" value="Update"
                         onClick={() =>
-                            this.updateDB(this.state.idToUpdate, this.state.updateName, this.state.updateMessage)
+                            this.updateDB(this.state.idToUpdate, this.state.updateName, this.state.updateColor)
                         }
-                    >
-                        UPDATE
-                    </button>
+                    />
                 </div>
             </div>
         );
     }
 }
 
-export default ClothesApi;
+export default MitarbeiterApi;
