@@ -3,6 +3,12 @@ import React/*, { Component }*/ from 'react';
 import Article from './article/Article';
 
 const ArticleList = (props) => {
+    let alex = 'Alexander Moser';
+    let iris = 'Iris Dregnat';
+    let [displayedName, setDisplayedName] = React.useState(alex);
+
+    // setDisplayedName(displayedName === alex ? iris : alex);
+
     let start = props.start || 1;
     let count = props.count || 10;
     let articles = [];
@@ -29,7 +35,7 @@ const ArticleList = (props) => {
     return (
         <div className="ArticleList">
             <form onSubmit={onSubmit}>
-                <div style={style.coworker}>Mitarbeiter: Alexander</div>
+                <div style={style.coworker}>Mitarbeiter: {displayedName}</div>
 
                 <div style={style.customer}>
                     Kunde: <input type="number" defaultValue="1" min="1" />
