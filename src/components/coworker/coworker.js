@@ -1,9 +1,9 @@
 
 // /client/App.js
 import React, { Component } from 'react';
-import axios from 'axios';
+import * as coworkerService from '../../services/coworker.service';
 
-class MitarbeiterApi extends Component {
+class CoworkerApi extends Component {
     // initialize our state
     state = {
         mitarbeiter: [],
@@ -18,11 +18,11 @@ class MitarbeiterApi extends Component {
 
     // changed and implement those changes into our UI
     componentDidMount() {
-        this.getMitarbeiterFromDb();
-        if (!this.state.intervalIsSet) {
-            let interval = setInterval(this.getMitarbeiterFromDb, 1000);
-            this.setState({ intervalIsSet: interval });
-        }
+        this.initCoworker();
+        // if (!this.state.intervalIsSet) {
+        //     let interval = setInterval(this.initCoworker, 1000);
+        //     this.setState({ intervalIsSet: interval });
+        // }
     }
 
     // never let a process live forever
@@ -34,9 +34,8 @@ class MitarbeiterApi extends Component {
         }
     }
     // fetch data from our data base
-    getMitarbeiterFromDb = () => {
-        fetch('http://localhost:9000/mitarbeiter')
-            .then((mitarbeiter) => mitarbeiter.json())
+    initCoworker = () => {
+        coworkerService.getCoworker()
             .then((res) => this.setState({ mitarbeiter: res.mitarbeiter }));
     };
 
@@ -48,11 +47,8 @@ class MitarbeiterApi extends Component {
         while (currentIds.includes(idToBeAdded)) {
             ++idToBeAdded;
         }
-        axios.post('http://localhost:9000/mitarbeiter', {
-            mitarbeiterID: idToBeAdded,
-            name:name,
-            color: color,
-        });
+
+        coworkerService.createCoworker(idToBeAdded, name, color);
     };
 
     // to remove existing database information
@@ -65,19 +61,15 @@ class MitarbeiterApi extends Component {
                 objIdToDelete = dat.mitarbeiterID;
             }
         });
-        axios.delete('http://localhost:9000/mitarbeiter/'+ objIdToDelete, {
-            data: {
-                mitarbeiterID: objIdToDelete
-            },
-        });
 
+        coworkerService.deleteCoworker(objIdToDelete);
     };
 
     // to overwrite existing data base information
     updateDB = (idToUpdate, updateName, updateColor) => {
         let objIdToUpdate = null;
         let id = parseInt(idToUpdate);
-        this.setState({ mitarbeiterID:id });
+        this.setState({ mitarbeiterID: id });
         this.state.mitarbeiter.forEach((dat) => {
             if(dat.mitarbeiterID === id) {
                 objIdToUpdate = dat.mitarbeiterID;
@@ -85,10 +77,7 @@ class MitarbeiterApi extends Component {
             }
         });
 
-        axios.put('http://localhost:9000/mitarbeiter/'+ objIdToUpdate, {
-            name: updateName,
-            color: updateColor });
-
+        coworkerService.updateCoworker(objIdToUpdate, updateName, updateColor);
     };
 
     // here is our UI
@@ -163,4 +152,4 @@ class MitarbeiterApi extends Component {
     }
 }
 
-export default MitarbeiterApi;
+export default CoworkerApi;

@@ -4,8 +4,9 @@ import Article from './article/Article';
 
 const ArticleList = (props) => {
     let alex = 'Alexander Moser';
-    let iris = 'Iris Dregnat';
-    let [displayedName, setDisplayedName] = React.useState(alex);
+    let [displayedName] = React.useState(alex);
+    // let iris = 'Iris Dregnat';
+    // let [displayedName, setDisplayedName] = React.useState(alex);
 
     // setDisplayedName(displayedName === alex ? iris : alex);
 
