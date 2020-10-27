@@ -1,10 +1,19 @@
 import axios from 'axios';
 
-const coworkerUrl = 'http://localhost:9000/mitarbeiter';
+const coworkerUrl = 'http://localhost:9000/coworker';
 
-export function getCoworker() {
-    return axios.get(coworkerUrl);
-    // .then((mitarbeiter) => mitarbeiter.json());
+export function getCoworkers() {
+    return axios.get(coworkerUrl)
+        .then((response) => {
+            return response.data;
+        });
+};
+
+export function getCoworker(id) {
+    return axios.get(coworkerUrl + '/' + id)
+        .then((response) => {
+            return response.data;
+        });
 };
 
 export function createCoworker(idToBeAdded, name, color) {

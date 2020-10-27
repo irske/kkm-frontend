@@ -3,10 +3,10 @@
 import React, { Component } from 'react';
 import * as coworkerService from '../../services/coworker.service';
 
-class CoworkerApi extends Component {
+class Coworker extends Component {
     // initialize our state
     state = {
-        mitarbeiter: [],
+        coworker: [],
         mitarbeiterID: 0,
         name: null,
         color: null,
@@ -35,14 +35,17 @@ class CoworkerApi extends Component {
     }
     // fetch data from our data base
     initCoworker = () => {
-        coworkerService.getCoworker()
-            .then((res) => this.setState({ mitarbeiter: res.mitarbeiter }));
+        coworkerService.getCoworkers()
+            .then((coworkers) => {
+                return this.setState({ coworker: coworkers });
+            });
+            // .then((res) => this.setState({ coworker: res.coworker }));
     };
 
 
     // to create new query into our data base
-    postMitarbeiterToDB = (name, color) => {
-        let currentIds = this.state.mitarbeiter.map((mitarbeiter) => mitarbeiter.mitarbeiterID);
+    createCoworker = (name, color) => {
+        let currentIds = this.state.coworker.map((coworker) => coworker.mitarbeiterID);
         let idToBeAdded = 0;
         while (currentIds.includes(idToBeAdded)) {
             ++idToBeAdded;
@@ -52,11 +55,11 @@ class CoworkerApi extends Component {
     };
 
     // to remove existing database information
-    deleteFromDB = (idToDelete) => {
+    deleteCoworker = (idToDelete) => {
         parseInt(idToDelete);
         let objIdToDelete = null;
         this.setState({ mitarbeiterID:idToDelete });
-        this.state.mitarbeiter.forEach((dat) => {
+        this.state.coworker.forEach((dat) => {
             if (dat.mitarbeiterID === idToDelete) {
                 objIdToDelete = dat.mitarbeiterID;
             }
@@ -66,11 +69,11 @@ class CoworkerApi extends Component {
     };
 
     // to overwrite existing data base information
-    updateDB = (idToUpdate, updateName, updateColor) => {
+    updateCoworker = (idToUpdate, updateName, updateColor) => {
         let objIdToUpdate = null;
         let id = parseInt(idToUpdate);
         this.setState({ mitarbeiterID: id });
-        this.state.mitarbeiter.forEach((dat) => {
+        this.state.coworker.forEach((dat) => {
             if(dat.mitarbeiterID === id) {
                 objIdToUpdate = dat.mitarbeiterID;
                 console.log('found');
@@ -84,24 +87,21 @@ class CoworkerApi extends Component {
     // it is easy to understand their functions when you
     // see them render into our screen
     render() {
-        const { mitarbeiter } = this.state;
+        const { coworker } = this.state;
         return (
             <div>
-                <table><tbody>
-                    {mitarbeiter.length <= 0
-                        ? 'NO DB ENTRIES YET'
-                        : mitarbeiter.map((dat) => (
-                            <tr style={{ padding: '10px' }} key={dat.mitarbeiterID}>
-                                <td>
-                                    <span style={{ color: 'gray' }}> id: </span> {dat.mitarbeiterID} </td>
-                                <td>
-                                <span style={{ color: 'gray' }}> name: </span>
-                                    {dat.name}</td>  <td>
-                                <span style={{ color: 'gray' }}> color: </span>
-                                {dat.color}</td>  <td>
-                                <input type="button" onClick={() => this.deleteFromDB(dat.mitarbeiterID)} value="Delete" /></td>
-                            </tr>
-                        ))}</tbody>
+                <table>
+                    <tbody>{coworker.length <= 0 ? 'NO DB ENTRIES YET' : coworker.map((dat) => (
+                        <tr style={{ padding: '10px' }} key={dat.mitarbeiterID}><td>
+                            <span style={{ color: 'gray' }}> id: </span> {dat.mitarbeiterID}
+                        </td><td>
+                            <span style={{ color: 'gray' }}> name: </span> {dat.name}
+                        </td><td>
+                            <span style={{ color: 'gray' }}> color: </span> {dat.color}
+                        </td><td>
+                            <input type="button" onClick={() => this.deleteCoworker(dat.mitarbeiterID)} value="Delete" />
+                        </td></tr>
+                    ))}</tbody>
                 </table>
 
                 <div style={{ padding: '10px' }}>
@@ -119,7 +119,7 @@ class CoworkerApi extends Component {
                         placeholder="add something in the database"
                         style={{ width: '200px' }}
                     />
-                    <input type="button" onClick={() => this.postMitarbeiterToDB(this.state.name, this.state.color)} value="add">
+                    <input type="button" onClick={() => this.createCoworker(this.state.name, this.state.color)} value="add">
                     </input>
                 </div>
                 <div style={{ padding: '10px' }}>
@@ -143,7 +143,7 @@ class CoworkerApi extends Component {
                     />
                     <input type="button" value="Update"
                         onClick={() =>
-                            this.updateDB(this.state.idToUpdate, this.state.updateName, this.state.updateColor)
+                            this.updateCoworker(this.state.idToUpdate, this.state.updateName, this.state.updateColor)
                         }
                     />
                 </div>
@@ -152,4 +152,4 @@ class CoworkerApi extends Component {
     }
 }
 
-export default CoworkerApi;
+export default Coworker;

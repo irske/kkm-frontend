@@ -1,6 +1,6 @@
 import React/*, { Component }*/ from 'react';
 // import PropTypes from 'prop-types';
-import Article from './article/Article';
+import Article from './article/article';
 
 const ArticleList = (props) => {
     let alex = 'Alexander Moser';

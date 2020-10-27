@@ -1,6 +1,6 @@
 import React/*, { Component }*/ from 'react';
 // import PropTypes from 'prop-types';
-import Selector from './../../selector/Selector';
+import Selector from '../../selector/selector';
 
 const Article = (props) => {
     const id = props.id;
